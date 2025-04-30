@@ -5,17 +5,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { userLogin } from "../reduxuse/extrafeature/authActions";
 import { useNavigate } from "react-router";
 
-
 export function SignIn({ showSignIn }) {
   const [showpassowrd, Setshowpassword] = useState(false);
   const { userInfo } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  useEffect(() => {
-    if (userInfo) {
-      navigate("/loggedin");
-    }
-  }, [userInfo, navigate]);
 
   const {
     register,
@@ -25,6 +19,9 @@ export function SignIn({ showSignIn }) {
 
   const onSubmit = (data) => {
     dispatch(userLogin(data));
+    if (userInfo) {
+      navigate("/loggedin");
+    }
   };
 
   return (

@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 export const backendURL = "https://taskmanager-sek9.onrender.com/api/v1";
-// export const backendURL = "http://localhost:5000/api/v1";
+// export const backendURL = "http://localhost:8000/api/v1";
 export const registerUser = createAsyncThunk(
   "auth/registerUser",
   async ({ email, name, country, password }, { rejectWithValue }) => {
@@ -61,9 +61,9 @@ export const userLogin = createAsyncThunk(
   }
 );
 
-export const userLogout = createAsyncThunk(
-  "auth/logout",
-  async ({},{ rejectWithValue }) => {
+export const currentUser = createAsyncThunk(
+  "auth/currentuser",
+  async (_, { rejectWithValue }) => {
     try {
       const config = {
         headers: {
@@ -71,7 +71,37 @@ export const userLogout = createAsyncThunk(
         },
         withCredentials: true,
       };
-      const { data } = await axios.post(`${backendURL}/users/logout`, {}, config);
+      const { data } = await axios.get(
+        `${backendURL}/users/current-user`,
+        config
+      );
+
+      return data.data;
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue(error.message);
+      }
+    }
+  }
+);
+
+export const userLogout = createAsyncThunk(
+  "auth/logout",
+  async ({}, { rejectWithValue }) => {
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      };
+      const { data } = await axios.post(
+        `${backendURL}/users/logout`,
+        {},
+        config
+      );
 
       return data;
     } catch (error) {

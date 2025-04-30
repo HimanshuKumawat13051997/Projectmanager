@@ -1,4 +1,3 @@
-
 import "./App.css";
 import { Navigate, Route, Routes } from "react-router";
 import { MainComp } from "./pages/maincomponent";
@@ -6,43 +5,29 @@ import { SigningLayout } from "./Layout/signingLayout";
 import { ProjectManager } from "./Components/projectmanager";
 import { ProjectDetails } from "./Components/taskmanager";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
-import { backendURL } from "./reduxuse/extrafeature/authActions";
 import { useEffect } from "react";
-import { userSet } from "./reduxuse/slices/authSlice";
-
+import { currentUser } from "./reduxuse/extrafeature/authActions";
 
 export function App() {
-
-  const dispatch = useDispatch()
-
+  const { userInfo } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
   useEffect(() => {
-    const checkUserSession = async () => {
-      try {
-        const response = await axios.get(`${backendURL}/users/current-user`, {
-          withCredentials: true,
-        });
-        dispatch(userSet(response.data.data));
-      } catch (error) {
-        console.log("Session expired or not found");
-      }
-    };
-  
-    checkUserSession();
+    dispatch(currentUser());
   }, []);
 
-  return (
+  console.log(userInfo);
 
+  return (
     <div className="box-content grid grid-cols-2 grid-rows-12 gap-1 h-screen w-screen">
       <Routes>
-        <Route path="/" element={<SigningLayout />} />
+        <Route
+          index
+          element={!userInfo ? <SigningLayout /> : <Navigate to="/loggedin" />}
+        />
+        {/* <Route index element={<SigningLayout />} /> */}
         <Route
           path="/loggedin"
-          element={
-            <ProtectedRoute>
-              <MainComp />
-            </ProtectedRoute>
-          }
+          element={userInfo ? <MainComp /> : <Navigate to="/" />}
         >
           <Route index element={<ProjectManager />} />
           <Route path=":id" element={<ProjectDetails />} />
@@ -51,9 +36,3 @@ export function App() {
     </div>
   );
 }
-
-const ProtectedRoute = ({children}) => {
-  const { userInfo } = useSelector((state) => state.auth);
-  return userInfo ? children: <Navigate to="/" replace />;
-};
-
