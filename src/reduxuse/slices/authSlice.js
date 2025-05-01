@@ -45,7 +45,7 @@ export const authSlice = createSlice({
       })
       .addCase(userLogout.fulfilled, (state) => {
         state.loading = false;
-        state.success = false;
+        state.success = true;
         state.userInfo = null;
       })
       .addCase(userLogout.rejected, (state, { payload }) => {
@@ -59,12 +59,13 @@ export const authSlice = createSlice({
       })
       .addCase(currentUser.fulfilled, (state, { payload }) => {
         state.loading = false;
-        state.success = false;
+        state.success = true;
         state.userInfo = payload;
       })
       .addCase(currentUser.rejected, (state, { payload }) => {
         state.loading = false;
         state.error = payload;
+        state.userInfo = null;
       });
   },
 });

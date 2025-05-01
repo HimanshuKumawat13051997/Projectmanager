@@ -11,10 +11,6 @@ export function SignIn({ showSignIn }) {
   const { success } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  console.log(userInfo);
-  useEffect(() => {
-    dispatch(currentUser());
-  }, []);
 
   useEffect(() => {
     if (userInfo) {
