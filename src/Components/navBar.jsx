@@ -24,7 +24,7 @@ export function NavBar() {
       </div>
       <div className="flex gap-5 h-full">
         <span
-          onClick={handleLogout}
+          onClick={() => handleLogout()}
           className="cursor-pointer flex items-center justify-center h-full p-1 hover:bg-[#dbdbdb]"
         >
           Logout
