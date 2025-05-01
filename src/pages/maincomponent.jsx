@@ -1,17 +1,16 @@
-import { ContentLayout } from "../Layout/contentLayout";
+// import { ContentLayout } from "../Layout/contentLayout";
+import { Outlet } from "react-router";
 import { NavBar } from "../Components/navBar";
-import { useSelector } from "react-redux";
-import { Loading } from "../Components/loading";
 
 export function MainComp() {
-  const { userInfo } = useSelector((state) => state.auth);
-  if (!userInfo) {
-    return <Loading />;
-  }
   return (
     <>
       <NavBar />
-      <ContentLayout />
+      <div className="box-border h-full col-span-2 row-span-12 row-start-2 grid grid-cols-12 grid-rows-12 gap-1">
+        <Outlet />
+      </div>
+
+      {/* <ContentLayout /> */}
     </>
   );
 }

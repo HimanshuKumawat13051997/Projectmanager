@@ -6,18 +6,10 @@ import { currentUser, userLogin } from "../reduxuse/extrafeature/authActions";
 import { useNavigate } from "react-router";
 
 export function SignIn({ showSignIn }) {
-  const { userInfo } = useSelector((state) => state.auth);
   const [showpassowrd, Setshowpassword] = useState(false);
   const { success } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (userInfo) {
-      navigate("/loggedin");
-    }
-  }, [userInfo]);
-
   const {
     register,
     handleSubmit,

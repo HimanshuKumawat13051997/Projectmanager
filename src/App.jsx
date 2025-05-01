@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { currentUser } from "./reduxuse/extrafeature/authActions";
 import { Loading } from "./Components/loading";
+import { NavBar } from "./Components/navBar";
 
 export function App() {
   const { userInfo, loading, error } = useSelector((state) => state.auth);
@@ -29,12 +30,16 @@ export function App() {
           element={!userInfo ? <SigningLayout /> : <Navigate to="/loggedin" />}
         />
         {/* <Route index element={<SigningLayout />} /> */}
+
         <Route
           path="/loggedin"
           element={userInfo ? <MainComp /> : <Navigate to="/" />}
         >
-          <Route index element={<ProjectManager />} />
-          <Route path=":id" element={<ProjectDetails />} />
+          <Route
+            path="/loggedin"
+            element={userInfo ? <ProjectManager /> : <Navigate to="/" />}
+          />
+          <Route path="/loggedin/:id" element={<ProjectDetails />} />
         </Route>
       </Routes>
     </div>
