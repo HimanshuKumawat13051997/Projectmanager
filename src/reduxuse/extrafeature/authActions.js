@@ -97,8 +97,7 @@ export const userLogout = createAsyncThunk(
         },
         withCredentials: true,
       };
-      await axios.post(`${backendURL}/users/logout`, config);
-
+      await axios.post(`${backendURL}/users/logout`, {}, config);
       return null;
     } catch (error) {
       if (error.response && error.response.data.message) {
