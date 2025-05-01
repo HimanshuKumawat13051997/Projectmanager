@@ -89,7 +89,7 @@ export const currentUser = createAsyncThunk(
 
 export const userLogout = createAsyncThunk(
   "auth/logout",
-  async (_, { rejectWithValue }) => {
+  async ({}, { rejectWithValue }) => {
     try {
       const config = {
         headers: {
