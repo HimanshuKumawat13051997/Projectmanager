@@ -1,28 +1,15 @@
 import { useDispatch, useSelector } from "react-redux";
-import { backendURL, userLogout } from "../reduxuse/extrafeature/authActions";
-import axios from "axios";
-import { userSet } from "../reduxuse/slices/authSlice";
+import { userLogout } from "../reduxuse/extrafeature/authActions";
+import { useNavigate } from "react-router";
 
 export function NavBar() {
   const { userInfo } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const logout = async () => {
-    await axios.post(
-      `${backendURL}/users/logout`,
-      {},
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      }
-    );
-    return null;
-  };
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
-    const d = await logout();
-    dispatch(userSet(d));
+    dispatch(userLogout({}));
+    navigate("/");
   };
 
   return (
