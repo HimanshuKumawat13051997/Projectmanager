@@ -1,48 +1,53 @@
-import  { useEffect } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
-import {  getProjects } from "../reduxuse/slices/projectSlice";
+import { getProjects } from "../reduxuse/slices/projectSlice";
 import axios from "axios";
 import { backendURL } from "../reduxuse/extrafeature/authActions";
-import { requestforAddproject, requestforDeleteProject } from "../reduxuse/extrafeature/requestforprojects";
+import {
+  requestforAddproject,
+  requestforDeleteProject,
+} from "../reduxuse/extrafeature/requestforprojects";
+import { Loading } from "./loading";
 
 export const ProjectManager = () => {
-  const {projects} = useSelector((state)=>state.project)
-  const {register, reset, handleSubmit} = useForm()
-  const dispatch = useDispatch()
+  const { projects } = useSelector((state) => state.project);
+  const { register, reset, handleSubmit } = useForm();
+  const dispatch = useDispatch();
+  const { userInfo } = useSelector((state) => state.auth);
 
-  const getAllProjects = async() => {
-    const data = await axios.get(`${backendURL}/project/getallproject`,{
-      headers : {
-        "Content-Type": "application/json"
+  if (!userInfo && !projects) {
+    return <Loading />;
+  }
+
+  const getAllProjects = async () => {
+    const data = await axios.get(`${backendURL}/project/getallproject`, {
+      headers: {
+        "Content-Type": "application/json",
       },
-      withCredentials: true
-    })
+      withCredentials: true,
+    });
 
-    dispatch(getProjects(data.data.data))
-  }
-  useEffect(()=>{
-    
-    getAllProjects()
-  },[dispatch])
+    dispatch(getProjects(data.data.data));
+  };
+  useEffect(() => {
+    getAllProjects();
+  }, [dispatch]);
 
-  
   const onSubmit = async (data) => {
-    await requestforAddproject(data)
-    getAllProjects()
-    reset()
-    };
+    await requestforAddproject(data);
+    getAllProjects();
+    reset();
+  };
 
-  const handleDelete =  async (e,id) => {
+  const handleDelete = async (e, id) => {
     e.stopPropagation();
-    await requestforDeleteProject(id)
-    getAllProjects()
-  }
+    await requestforDeleteProject(id);
+    getAllProjects();
+  };
 
   const navigate = useNavigate();
-
-  
 
   return (
     <div className="col-span-12 row-span-12 flex justify-center items-start p-6">
@@ -73,7 +78,9 @@ export const ProjectManager = () => {
         </form>
 
         {projects.length === 0 ? (
-          <p className="text-gray-500 text-center">No projects yet. Add one above.</p>
+          <p className="text-gray-500 text-center">
+            No projects yet. Add one above.
+          </p>
         ) : (
           <ul className="space-y-4">
             {projects.map((project) => (
@@ -82,9 +89,11 @@ export const ProjectManager = () => {
                 onClick={() => navigate(`/loggedin/${project._id}`)}
                 className="flex justify-between items-center px-5 py-4 bg-gray-50 border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer"
               >
-                <span className="text-lg text-gray-800">{project.projectname}</span>
+                <span className="text-lg text-gray-800">
+                  {project.projectname}
+                </span>
                 <button
-                  onClick={(e) => handleDelete(e,project._id)}
+                  onClick={(e) => handleDelete(e, project._id)}
                   className="text-red-600 font-medium hover:underline"
                 >
                   Delete
@@ -97,5 +106,3 @@ export const ProjectManager = () => {
     </div>
   );
 };
-
-
