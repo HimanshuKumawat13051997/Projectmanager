@@ -89,7 +89,7 @@ export const currentUser = createAsyncThunk(
 
 export const userLogout = createAsyncThunk(
   "auth/logout",
-  async ({}, { rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
       const config = {
         headers: {
@@ -97,13 +97,9 @@ export const userLogout = createAsyncThunk(
         },
         withCredentials: true,
       };
-      const { data } = await axios.post(
-        `${backendURL}/users/logout`,
-        {},
-        config
-      );
+      await axios.post(`${backendURL}/users/logout`, config);
 
-      return data;
+      return null;
     } catch (error) {
       if (error.response && error.response.data.message) {
         return rejectWithValue(error.response.data.message);
